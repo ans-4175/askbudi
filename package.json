@@ -1,0 +1,46 @@
+{
+  "name": "korektorbot",
+  "version": "0.0.0",
+  "description": "The best module ever.",
+  "author": {
+    "name": "Pandu",
+    "email": "anpandumail@gmail.com",
+    "url": "anpandu.com"
+  },
+  "repository": "anpandu/korektorbot",
+  "license": "MIT",
+  "files": [
+    "index.js",
+    "cli.js"
+  ],
+  "keywords": [
+    "korektorbot",
+    ""
+  ],
+  "dependencies": {
+    "bluebird": "^2.9.30",
+    "meow": "^3.1.0",
+    "twitter": "^1.2.5",
+    "underscore": "*"
+  },
+  "devDependencies": {
+    "browserify": "^9.0.3",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-nodeunit": "^0.4.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-mocha-cli": "^1.12.0",
+    "jshint-stylish": "^1.0.1",
+    "load-grunt-tasks": "^3.1.0",
+    "time-grunt": "^1.1.0",
+    "chai": "*",
+    "mocha": "*"
+  },
+  "scripts": {
+    "test": "grunt",
+    "browser": "browserify index.js > browser.js"
+  },
+  "bin": {
+    "korektorbot": "cli.js"
+  }
+}
