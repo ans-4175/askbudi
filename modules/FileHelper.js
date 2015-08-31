@@ -1,4 +1,4 @@
-/*! jsmodule1 v0.0.0 - MIT license */
+/*! FileHelper v0.0.0 - MIT license */
 
 'use strict';
 
@@ -7,7 +7,6 @@
  */
 var _ = require('underscore');
 var Promise = require('bluebird');
-
 
 /**
  * @param {}
@@ -21,9 +20,10 @@ FileHelper.prototype.loadKamus = function() {
 	return new Promise( function (resolve, reject) {
 		var fs = require('fs');
 		fs.readFile('modules/kamus.json', 'utf8', function(err, data) {
+			var result = JSON.parse(data);
 		    if(err)
 		        reject([]);
-		    resolve(data);
+		    resolve(result);
 		});
 	});
 }
