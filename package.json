@@ -1,5 +1,5 @@
 {
-  "name": "korektorbot",
+  "name": "askbudi",
   "version": "0.0.0",
   "description": "The best module ever.",
   "author": {
@@ -7,14 +7,14 @@
     "email": "anpandumail@gmail.com",
     "url": "anpandu.com"
   },
-  "repository": "anpandu/korektorbot",
+  "repository": "anpandu/askbudi",
   "license": "MIT",
   "files": [
     "index.js",
     "cli.js"
   ],
   "keywords": [
-    "korektorbot",
+    "askbudi",
     ""
   ],
   "dependencies": {
@@ -42,6 +42,6 @@
     "browser": "browserify index.js > browser.js"
   },
   "bin": {
-    "korektorbot": "cli.js"
+    "askbudi": "cli.js"
   }
 }

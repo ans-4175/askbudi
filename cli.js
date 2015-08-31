@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 'use strict';
 var meow = require('meow');
-var kbbibot = require('./');
+var askbudi = require('./');
 
 var cli = meow({
   help: [
     'Usage',
-    '  kbbibot <input>',
+    '  askbudi <input>',
     '',
     'Example',
-    '  kbbibot Unicorn'
+    '  askbudi Unicorn'
   ].join('\n')
 });
 
-kbbibot(cli.input[0]);
+askbudi(cli.input[0]);
