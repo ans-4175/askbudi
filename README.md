@@ -6,21 +6,21 @@
 ## Install
 
 ```sh
-$ npm install --save kbbibot
+$ npm install --save askbudi
 ```
 
 
 ## Usage
 
 ```js
-var kbbibot = require('kbbibot');
+var askbudi = require('askbudi');
 
-kbbibot('Rainbow');
+askbudi('Rainbow');
 ```
 
 ```sh
-$ npm install --global kbbibot
-$ kbbibot --help
+$ npm install --global askbudi
+$ askbudi --help
 ```
 
 ```sh
@@ -34,9 +34,9 @@ $ npm run browser
 MIT © [Pandu](anpandu.com)
 
 
-[npm-image]: https://badge.fury.io/js/kbbibot.svg
-[npm-url]: https://npmjs.org/package/kbbibot
-[travis-image]: https://travis-ci.org/anpandu/kbbibot.svg?branch=master
-[travis-url]: https://travis-ci.org/anpandu/kbbibot
-[daviddm-image]: https://david-dm.org/anpandu/kbbibot.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/anpandu/kbbibot
+[npm-image]: https://badge.fury.io/js/askbudi.svg
+[npm-url]: https://npmjs.org/package/askbudi
+[travis-image]: https://travis-ci.org/anpandu/askbudi.svg?branch=master
+[travis-url]: https://travis-ci.org/anpandu/askbudi
+[daviddm-image]: https://david-dm.org/anpandu/askbudi.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/anpandu/askbudi
