@@ -1,16 +1,16 @@
 'use strict';
 
-var FileHelper = require('./modules/FileHelper.js');
 var TwitterClient = require('./modules/TwitterClient.js');
+var DataHelper = require('./modules/DataHelper.js');
 
-FileHelper.loadKamus()
-	.then(TwitterClient.stream)
-	.catch(console.log);
+TwitterClient.stream();
 
 TwitterClient.event.on('ada_stream', function(tweet) {
-	TwitterClient.correction(tweet)
+	DataHelper.preprocess(tweet)
+		.then(TwitterClient.getAnswer)
+		.then(TwitterClient.processAnswer)
 		.then(TwitterClient.postTweet)
-		.catch(TwitterClient.postTweet);
+		.catch(function (argument) {});
 });
 
 TwitterClient.event.on('ada_error', function(error) {

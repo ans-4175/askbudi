@@ -16,16 +16,21 @@ var Promise = require('bluebird');
 
 var FileHelper = function () {};
 
-FileHelper.prototype.loadKamus = function() {
+FileHelper.prototype.preprocess = function(data) {
 	return new Promise( function (resolve, reject) {
-		var fs = require('fs');
-		fs.readFile('modules/kamus.json', 'utf8', function(err, data) {
-			var result = JSON.parse(data);
-		    if(err)
-		        reject([]);
-		    resolve(result);
-		});
+		var original = data;
+		var tweet = {
+			twid: original['id'],
+			active: false,
+			author: original['user']['name'],
+			avatar: original['user']['profile_image_url'],
+			body: original['text'],
+			date: original['created_at'],
+			screenname: original['user']['screen_name']
+		};
+		resolve(tweet);
 	});
+}
 }
 
 module.exports = new FileHelper ();

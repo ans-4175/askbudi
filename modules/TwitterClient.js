@@ -6,10 +6,10 @@
  * Module dependencies
  */
 var _ = require('underscore');
+var request = require('request');
 var Promise = require('bluebird');
 var Twitter = require('twitter');
 var EventEmitter = require("events").EventEmitter;
-var Tokenizer = require('../modules/Tokenizer.js');
 
 /**
  * @param {}
@@ -19,19 +19,16 @@ var Tokenizer = require('../modules/Tokenizer.js');
 
 var TwitterClient = function () {};
 
-TwitterClient.prototype.kamus = [[]];
 TwitterClient.prototype.event = new EventEmitter();
-TwitterClient.prototype.stream = function(kamus) {
-	TwitterClient.prototype.kamus = kamus;
-	// TwitterClient.prototype.correction(kamus, 'paham');
+TwitterClient.prototype.stream = function() {
 	var client = new Twitter({
 		consumer_key: 'Dsmj7TH879HnWAA6n4aug',
 		consumer_secret: 'Wya4BuwIjGn5MJLbYcH3FqGjJhUmo63eSAu1jZ4fZk',
-		access_token_key: '3334132323-2EGzJaw0KCDm8ibP6NuppZ1iAIdZ02yVepzcaiE',
-		access_token_secret: '1q4z86o9pHv2l3Dj0hQMQ8vX7PTDHBzTlrWsUWcC8usCX'
+		access_token_key: '3249425742-JtZeoEgChEOrS70MYbdxtGX0Ox8HBtWpkl2YCBf',
+		access_token_secret: 'TkFzP5KfsH1u5zbp9eCE47e0vDZ9FjoEptR6FgUfyOAC6'
 	});
-	// client.post('statuses/update', { status: 'hello world!' }, function(err, data, response) {console.log(data)})
-	client.stream('statuses/filter', {locations: '107.4379109,-6.9708697,107.7455281,-6.8435694,106.7067372,-6.328073,106.9888851,-6.103677'}, function(stream) {
+	// client.stream('statuses/filter', {locations: '107.4379109,-6.9708697,107.7455281,-6.8435694,106.7067372,-6.328073,106.9888851,-6.103677'}, function(stream) {
+	client.stream('statuses/filter', {track: '#askbudi'}, function(stream) {
 		stream.on('data', function(tweet) {
 			TwitterClient.prototype.event.emit("ada_stream", tweet);
 		});
@@ -40,36 +37,68 @@ TwitterClient.prototype.stream = function(kamus) {
 		});
 	});
 }
-TwitterClient.prototype.correction = function(tweet) {
+
+TwitterClient.prototype.getAnswer = function(tweet) {
 	return new Promise(function (resolve, reject) {
-		var sentence = tweet.text;
-		var kamus = TwitterClient.prototype.kamus;
-		var words = Tokenizer.tokenize(sentence);
-		_.each(words, function (word) {
-			var found = _.find(kamus, function (item) {return item[0] == sentence;});
-			var result = {};
-			result.original = tweet;
-			if (_.isUndefined(found)) {
-				result.sentence = 'all is correct';
-				reject(result);
-			}
-			result.sentence = "Maaf bukan '"+found[1]+"' mas/mbak, yang benar '"+found[0]+"'.";
-			resolve(result);
-		})
+		var sentence = tweet.body;
+		sentence = sentence.replace(' #askbudi', '');
+		sentence = sentence.replace('#askbudi', '');
+		var url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles='+sentence;
+		request({
+		  uri: url,
+		  method: "GET",
+		  timeout: 10000,
+		  followRedirect: true,
+		  maxRedirects: 10
+		}, function(error, response, body) {
+			if (error)
+				reject(error);
+
+			var key='';
+			var data = JSON.parse(body);
+			for (var i in data.query.pages)
+				key = i;
+			var content = data.query.pages[i].extract;
+			if ((typeof(content)=='undefined')||(content.indexOf('This is a redirect from a title with another method of capitalisation.')>-1))
+				content =  '';
+
+			tweet.answer = (content.length > 0) ? content : 'can\'t find \''+sentence+'\', please try again';
+			resolve(tweet);
+		});
 	});
 }
+
+TwitterClient.prototype.processAnswer = function(content) {
+	return new Promise(function (resolve, reject) {
+		var username = '@'+content.screen_name;
+		var sentences = content.answer.split('.');
+		var count = 0;
+		var post = username + " " + sentences[0] + '.';
+		do {
+			count += 1;
+			var temp = post + sentences[count] + '.';
+			if ((temp.length<=140)&&(count<sentences.length))
+				post = temp;
+		} while ((temp.length<=140)&&(count<sentences.length))
+		if (post.length>140)
+			post = post.substring(0,137) + '...';
+		resolve(post);
+	});
+}
+
 TwitterClient.prototype.postTweet = function(data) {
 	return new Promise(function (resolve, reject) {
-		var tweet = data.original;
-		var stream = {};
-		stream.username = '@'+tweet.user.screen_name;
-		stream.text = tweet.text;
-		console.log(JSON.stringify(stream));
-		// var post = stream.username + " " + data.sentence;
-		// console.log('');
-		// console.log(stream.username);
-		// console.log(stream.text);
-		// console.log(post);
+		var client = new Twitter({
+			consumer_key: 'Dsmj7TH879HnWAA6n4aug',
+			consumer_secret: 'Wya4BuwIjGn5MJLbYcH3FqGjJhUmo63eSAu1jZ4fZk',
+			access_token_key: '3334132323-2EGzJaw0KCDm8ibP6NuppZ1iAIdZ02yVepzcaiE',
+			access_token_secret: '1q4z86o9pHv2l3Dj0hQMQ8vX7PTDHBzTlrWsUWcC8usCX'
+		});
+		client.post('statuses/update', { status: data }, function(err, data, response) {
+			if (err)
+				console.log(err)
+			console.log(data.text)
+		});
 	});
 }
 

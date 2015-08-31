@@ -21,7 +21,8 @@
     "bluebird": "^2.9.30",
     "meow": "^3.1.0",
     "twitter": "^1.2.5",
-    "underscore": "*"
+    "underscore": "*",
+    "request": "*"
   },
   "devDependencies": {
     "browserify": "^9.0.3",
