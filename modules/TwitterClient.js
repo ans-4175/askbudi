@@ -9,6 +9,7 @@ var _ = require('underscore');
 var Promise = require('bluebird');
 var Twitter = require('twitter');
 var EventEmitter = require("events").EventEmitter;
+var Tokenizer = require('../modules/Tokenizer.js');
 
 /**
  * @param {}
@@ -39,14 +40,36 @@ TwitterClient.prototype.stream = function(kamus) {
 		});
 	});
 }
-TwitterClient.prototype.correction = function(word) {
+TwitterClient.prototype.correction = function(tweet) {
 	return new Promise(function (resolve, reject) {
+		var sentence = tweet.text;
 		var kamus = TwitterClient.prototype.kamus;
-		var found = _.find(kamus, function (item) {return item[0] == word;});
-		if (_.isUndefined(found))
-			reject('not found');
-		var sentence = "Maaf bukan '"+found[1]+"' mas/mbak, yang benar '"+found[0]+"'.";
-		resolve(sentence);
+		var words = Tokenizer.tokenize(sentence);
+		_.each(words, function (word) {
+			var found = _.find(kamus, function (item) {return item[0] == sentence;});
+			var result = {};
+			result.original = tweet;
+			if (_.isUndefined(found)) {
+				result.sentence = 'all is correct';
+				reject(result);
+			}
+			result.sentence = "Maaf bukan '"+found[1]+"' mas/mbak, yang benar '"+found[0]+"'.";
+			resolve(result);
+		})
+	});
+}
+TwitterClient.prototype.postTweet = function(data) {
+	return new Promise(function (resolve, reject) {
+		var tweet = data.original;
+		var stream = {};
+		stream.username = '@'+tweet.user.screen_name;
+		stream.text = tweet.text;
+		console.log(JSON.stringify(stream));
+		// var post = stream.username + " " + data.sentence;
+		// console.log('');
+		// console.log(stream.username);
+		// console.log(stream.text);
+		// console.log(post);
 	});
 }
 

@@ -8,12 +8,9 @@ FileHelper.loadKamus()
 	.catch(console.log);
 
 TwitterClient.event.on('ada_stream', function(tweet) {
-	console.log('');
-	console.log('@'+tweet.user.screen_name);
-	console.log(tweet.text);
-	// TwitterClient.correction('paham')
-	// 	.then(console.log)
-	// 	.catch(console.log);
+	TwitterClient.correction(tweet)
+		.then(TwitterClient.postTweet)
+		.catch(TwitterClient.postTweet);
 });
 
 TwitterClient.event.on('ada_error', function(error) {
