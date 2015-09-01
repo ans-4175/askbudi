@@ -7,6 +7,7 @@
  */
 var _ = require('underscore');
 var Promise = require('bluebird');
+var Tweet = require('../models/Tweet.js');
 
 /**
  * @param {}
@@ -28,6 +29,17 @@ DataHelper.prototype.preprocess = function(data) {
 			screen_name: data['user']['screen_name']
 		};
 		resolve(tweet);
+	});
+}
+
+DataHelper.prototype.saveToMongo = function(twit) {
+	return new Promise( function (resolve, reject) {
+		var t = new Tweet(twit);
+		t.save(function (err, t) {
+			if (err)
+				reject(err);
+			resolve(t);
+		});
 	});
 }
 

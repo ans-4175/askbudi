@@ -97,7 +97,8 @@ TwitterClient.prototype.postTweet = function(data) {
 		client.post('statuses/update', { status: data }, function(err, data, response) {
 			if (err)
 				console.log(err)
-			console.log(data.text)
+			// console.log(data.text)
+			resolve(data);
 		});
 	});
 }
