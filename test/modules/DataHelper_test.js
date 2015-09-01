@@ -1,7 +1,7 @@
 'use strict';
 var assert = require('assert');
 var DataHelper = require('../../modules/DataHelper.js');
-var TwitterClient = require('../../modules/TwitterClient.js');
+// var TwitterClient = require('../../modules/TwitterClient.js');
 
 var input = {
     "created_at": "Mon Aug 31 15:45:50 +0000 2015",
