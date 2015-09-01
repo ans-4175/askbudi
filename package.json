@@ -35,7 +35,8 @@
     "load-grunt-tasks": "^3.1.0",
     "time-grunt": "^1.1.0",
     "chai": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "mongoose": "*"
   },
   "scripts": {
     "test": "grunt",
