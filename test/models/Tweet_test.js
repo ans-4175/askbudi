@@ -16,11 +16,12 @@ describe('Tweet model', function () {
 		    body: "Anjay hahaha  https://t.co/Q8d4jFePeU",
 		    date: "Mon Aug 31 04:42:12 +0000 2015",
 		    screen_name: "Dennyivanto"
-		}
+		};
 		var t = new Tweet(params);
 		return t.save(function (err, t) {
-			if (err) 
+			if (err) {
 				return console.error(err);
+			}
 			assert('_id' in t, 'tweet doesn\'t have _id');
 			Tweet.find({ _id: t._id }).remove().exec();
 		});

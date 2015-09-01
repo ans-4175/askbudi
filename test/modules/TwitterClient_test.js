@@ -1,6 +1,6 @@
 'use strict';
 var assert = require('assert');
-var TwitterClient = require('../modules/TwitterClient.js');
+var TwitterClient = require('../../modules/TwitterClient.js');
 
 describe('TwitterClient node module', function () {
 

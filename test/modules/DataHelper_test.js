@@ -1,6 +1,6 @@
 'use strict';
 var assert = require('assert');
-var DataHelper = require('../modules/DataHelper.js');
+var DataHelper = require('../../modules/DataHelper.js');
 
 describe('DataHelper node module', function () {
 
