@@ -11,12 +11,12 @@ TwitterClient.stream();
 TwitterClient.event.on('ada_stream', function(tweet) {
 	DataHelper.preprocess(tweet)
 		.then(function (data) {
-			DataHelper.saveToMongo(data)
+			var p1 = DataHelper.saveToMongo(data)
 				.then(function (twit) {
 					console.log(twit.body);
 				})
 				.catch(console.log);
-			return TwitterClient.getAnswer(data)
+			var p2 = TwitterClient.getAnswer(data)
 				.then(TwitterClient.processAnswer)
 				.then(TwitterClient.postTweet)
 				.then(DataHelper.preprocess)
@@ -25,6 +25,7 @@ TwitterClient.event.on('ada_stream', function(tweet) {
 					console.log(twit.body);
 				})
 				.catch(console.log);
+			return Promise.all([p1,p2]);
 		})
 		.catch(console.log);
 });

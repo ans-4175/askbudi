@@ -1,13 +1,13 @@
 'use strict';
 var assert = require('assert');
+var Promise = require('bluebird');
 var DataHelper = require('../../modules/DataHelper.js');
-// var TwitterClient = require('../../modules/TwitterClient.js');
 
 var input = {
     "created_at": "Mon Aug 31 15:45:50 +0000 2015",
     "id": 638377163121557500,
     "id_str": "638377163121557505",
-    "text": "fusion #askbudi",
+    "text": "earth #askbudi",
     "truncated": false,
     "user": {
         "id": 77960522,
@@ -82,30 +82,32 @@ describe('DataHelper node module', function () {
 	    });
 	});
 
-	it('save to mongo', function () {
+	// it('save to mongo', function () {
 
-		// var Mongoose = require('mongoose');
-		// var Tweet = require('../../models/Tweet.js');
-		// Mongoose.connect('mongodb://localhost/askbudi');
+	// 	var Mongoose = require('mongoose');
+	// 	var Tweet = require('../../models/Tweet.js');
+	// 	var TwitterClient = require('../../modules/TwitterClient.js');
+	// 	Mongoose.connect('mongodb://localhost/askbudi');
 
-		// return DataHelper.preprocess(input)
-		// 	.then(function (data) {
-		// 		DataHelper.saveToMongo(data)
-		// 			.then(function (twit) {
-		// 				console.log(twit.body);
-		// 			})
-		// 			.catch(console.log);
-		// 		return TwitterClient.getAnswer(data)
-		// 			.then(TwitterClient.processAnswer)
-		// 			.then(TwitterClient.postTweet)
-		// 			.then(DataHelper.preprocess)
-		// 			.then(DataHelper.saveToMongo)
-		// 			.then(function (twit) {
-		// 				console.log(twit.body);
-		// 			})
-		// 			.catch(console.log);
-		// 	})
-		// 	.catch(console.log);
-	});
+	// 	return DataHelper.preprocess(input)
+	// 		.then(function (data) {
+	// 			var p1 = DataHelper.saveToMongo(data)
+	// 				.then(function (twit) {
+	// 					console.log(twit.body);
+	// 				})
+	// 				.catch(console.log);
+	// 			var p2 = TwitterClient.getAnswer(data)
+	// 				.then(TwitterClient.processAnswer)
+	// 				.then(TwitterClient.postTweet)
+	// 				.then(DataHelper.preprocess)
+	// 				.then(DataHelper.saveToMongo)
+	// 				.then(function (twit) {
+	// 					console.log(twit.body);
+	// 				})
+	// 				.catch(console.log);
+	// 			return Promise.all([p1,p2]);
+	// 		})
+	// 		.catch(console.log);
+	// });
 
 });
