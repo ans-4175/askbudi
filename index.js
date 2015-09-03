@@ -6,7 +6,9 @@ var DataHelper = require('./modules/DataHelper.js');
 
 Mongoose.connect('mongodb://localhost/askbudi');
 
-TwitterClient.stream();
+var TweetModel = require('./models/Tweet.js');
+
+// TwitterClient.stream();
 
 TwitterClient.event.on('ada_stream', function(tweet) {
 	DataHelper.preprocess(tweet)
@@ -42,11 +44,17 @@ var io = require('socket.io')(server);
 
 server.listen(8080);
 
-// app.get('/', function (req, res) {
-//   res.sendfile(__dirname + '/index.html');
+// app.get('/get_tweets', function (req, res) {
+// 	// res.sendfile(__dirname + '/index.html');
 // });
 
 io.on('connection', function (socket) {
+	TweetModel.find({})
+		.sort({'date': -1})
+		.limit(20)
+		.exec(function (err, items) {
+			socket.emit('frontend:init', items);
+		});
 	TwitterClient.event.on('frontend:send', function(twit) {
 		socket.emit('frontend:list', twit);
 	});
