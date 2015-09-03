@@ -43,8 +43,6 @@ TwitterClient.prototype.getAnswer = function(tweet) {
 		var sentence = tweet.body;
 		sentence = sentence.replace(' #askbudi', '');
 		sentence = sentence.replace('#askbudi', '');
-
-
 		var search_url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&list=search&srsearch='+sentence;
 		request({
 			uri: search_url,
@@ -119,6 +117,13 @@ TwitterClient.prototype.postTweet = function(data) {
 			// console.log(data.text)
 			resolve(data);
 		});
+	});
+}
+
+TwitterClient.prototype.sendToFrontEnd = function(twit) {
+	return new Promise(function (resolve, reject) {
+		TwitterClient.prototype.event.emit('frontend:send', twit);
+		resolve(twit);
 	});
 }
 
