@@ -14,12 +14,21 @@ describe('TwitterClient node module', function () {
 	});
 
 	it('getAnswer #2', function () {
-		var search = {screen_name:'anpandu', body:'windows #askbudi'};
+		var search = {screen_name:'anpandu', body:'aisldnalncldg #askbudi'};
 		return TwitterClient.getAnswer(search).then(function(data){
 			assert('screen_name' in data, 'screen_name not found');
 			assert('body' in data, 'body not found');
 			assert('answer' in data, 'answer not found');
-			assert("can't find 'windows', please try again" === data.answer, 'answer not found #2');
+			assert("can't find 'aisldnalncldg', please try again" === data.answer, 'answer not found #2');
+	    });
+	});
+
+	it('getAnswer #3', function () {
+		var search = {screen_name:'anpandu', body:'milky way #askbudi'};
+		return TwitterClient.getAnswer(search).then(function(data){
+			assert('screen_name' in data, 'screen_name not found');
+			assert('body' in data, 'body not found');
+			assert('answer' in data, 'answer not found');
 	    });
 	});
 

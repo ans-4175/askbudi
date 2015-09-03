@@ -43,27 +43,46 @@ TwitterClient.prototype.getAnswer = function(tweet) {
 		var sentence = tweet.body;
 		sentence = sentence.replace(' #askbudi', '');
 		sentence = sentence.replace('#askbudi', '');
-		var url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles='+sentence;
+
+
+		var search_url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&list=search&srsearch='+sentence;
 		request({
-		  uri: url,
-		  method: "GET",
-		  timeout: 10000,
-		  followRedirect: true,
-		  maxRedirects: 10
+			uri: search_url,
+			method: "GET",
+			timeout: 10000,
+			followRedirect: true,
+			maxRedirects: 10
 		}, function(error, response, body) {
 			if (error)
 				reject(error);
-
-			var key='';
 			var data = JSON.parse(body);
-			for (var i in data.query.pages)
-				key = i;
-			var content = data.query.pages[i].extract;
-			if ((typeof(content)=='undefined')||(content.indexOf('This is a redirect from a title with another method of capitalisation.')>-1))
-				content =  '';
-
-			tweet.answer = (content.length > 0) ? content : 'can\'t find \''+sentence+'\', please try again';
-			resolve(tweet);
+			var results = data.query.search;
+			if (results.length==0) {
+				tweet.answer = 'can\'t find \''+sentence+'\', please try again';
+				resolve(tweet);
+			} else {
+				var title = results[0].title;
+				var answer_url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles='+title;
+				request({
+					uri: answer_url,
+					method: "GET",
+					timeout: 10000,
+					followRedirect: true,
+					maxRedirects: 10
+				}, function(error, response, body) {
+					if (error)
+						reject(error);
+					var key='';
+					var data = JSON.parse(body);
+					for (var i in data.query.pages)
+						key = i;
+					var content = data.query.pages[i].extract;
+					if ((typeof(content)=='undefined')||(content.indexOf('This is a redirect from a title with another method of capitalisation.')>-1))
+						content =  '';
+					tweet.answer = (content.length > 0) ? content : 'can\'t find \''+title+'\', please try again';
+					resolve(tweet);
+				});
+			}
 		});
 	});
 }
