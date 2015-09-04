@@ -15,9 +15,7 @@ TwitterClient.event.on('ada_stream', function(tweet) {
 		.then(function (data) {
 			var p1 = DataHelper.saveToMongo(data)
 				.then(TwitterClient.sendToFrontEnd)
-				.then(function (twit) {
-					console.log(twit.body);
-				})
+				.then(function (twit) {console.log(twit.body);})
 				.catch(console.log);
 			var p2 = TwitterClient.getAnswer(data)
 				.then(TwitterClient.processAnswer)
@@ -25,9 +23,7 @@ TwitterClient.event.on('ada_stream', function(tweet) {
 				.then(DataHelper.preprocess)
 				.then(DataHelper.saveToMongo)
 				.then(TwitterClient.sendToFrontEnd)
-				.then(function (twit) {
-					console.log(twit.body);
-				})
+				.then(function (twit) {console.log(twit.body);})
 				.catch(console.log);
 			return Promise.all([p1]);
 		})
@@ -48,15 +44,25 @@ server.listen(8080);
 // 	// res.sendfile(__dirname + '/index.html');
 // });
 
+var connection_count = 0;
+
 io.on('connection', function (socket) {
-	console.log('someone opened landing page')
+	connection_count += 1;
+	console.log(connection_count+' user(s) connected');
+	
 	TweetModel.find({})
 		.sort({'date': -1})
 		.limit(20)
 		.exec(function (err, items) {
 			socket.emit('frontend:init', items);
 		});
+
 	TwitterClient.event.on('frontend:send', function(twit) {
 		socket.emit('frontend:list', twit);
+	});
+
+	socket.on('disconnect', function (socket) {
+		connection_count -= 1;
+		console.log(connection_count+' user(s) connected');
 	});
 });
