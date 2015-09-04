@@ -8,7 +8,7 @@ Mongoose.connect('mongodb://localhost/askbudi');
 
 var TweetModel = require('./models/Tweet.js');
 
-// TwitterClient.stream();
+TwitterClient.stream();
 
 TwitterClient.event.on('ada_stream', function(tweet) {
 	DataHelper.preprocess(tweet)
@@ -49,6 +49,7 @@ server.listen(8080);
 // });
 
 io.on('connection', function (socket) {
+	console.log('someone opened landing page')
 	TweetModel.find({})
 		.sort({'date': -1})
 		.limit(20)
