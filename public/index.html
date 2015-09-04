@@ -27,26 +27,48 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">About Budi</h3>
                     </div>
-                    <div class="panel-body" id="stream_app">
-                        <p>Budi, the question-answering bot, is your best friend.</p>
-                        <ul>
-                            <li>Ask your question via <a href="http://twitter.com" target="_blank">twitter</a>.</li>
-                            <li>Ask your question via .</li>
-                        </ul>
-                        <p>
-                            This is only a sample page: it is not meant to be fully functional. We've used <a href="http://fortawesome.github.io/Font-Awesome/" target="_blank">Font Awesome</a> for the icons and have include FTLabs' <a href="https://github.com/ftlabs/fastclick" target="_blank">FastClick</a> library to make tapping links on iOS faster.
-                        </p>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <p><a href="https://twitter.com/tampanberiman">Budi</a>, the question-answering bot, is your best friend.</p>
+                                <ul>
+                                    <li>Ask your question by tweeting <a style="color:red">&#60;words&#62;</a> <a href="https://twitter.com/hashtag/askbudi">#askbudi</a>.</li>
+                                    <li>Budi only answer question with <a href="https://twitter.com/hashtag/askbudi">#askbudi</a> hashtag.</li>
+                                    <li>Budi always answer.</li>
+                                    <li>Budi knows everything wikipedia knows.</li>
+                                    <li>Please don't spam.</li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-3">
+                                <img src="https://pbs.twimg.com/profile_images/613549558014947328/qH3jQw-O_400x400.jpg" style="width:100%">
+                            </div>
+                            <!-- <div class="col-sm-"></div> -->
+                        </div>
                     </div>
                     <div class="panel-footer">
-                        <small class="pull-left">Built with NodeJS + SocketIO + Twitter API + Wikimedia API</small>
-                        <a class="btn btn-link btn-xs pull-right" href="#">askbudi.pandu.ml</a>
+                        <small class="pull-left">Bandung 2015 <i class="fa fa-heart"></i></small>
+                        <a class="btn btn-link btn-xs pull-right" href="http://askbudi.pandu.ml">askbudi.pandu.ml</a>
                     </div>
                 </div>
+
+                <div class="panel panel-default bootcards-richtext">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Technologies</h3>
+                    </div>
+                    <div class="list-group" id="tech_list">
+                        <!-- CONTENT -->
+                    </div>
+                    <div class="panel-footer">
+                        <small class="pull-left">Bandung 2015 <i class="fa fa-heart"></i></small>
+                        <a class="btn btn-link btn-xs pull-right" href="http://askbudi.pandu.ml">askbudi.pandu.ml</a>
+                    </div>
+                </div>
+
             </div>
             <div class="col-sm-5 bootcards-list" id="list">
                 <div class="panel panel-default">    
                     <div class="panel-heading clearfix">
-                        <h3 class="panel-title pull-left">Ask Me Anything!</h3>
+                        <h3 class="panel-title pull-left">#askbudi live stream</h3>
                         <div class="btn-group pull-right">
                             <a class="btn btn-primary" href="http://www.twitter.com" target="_blank">
                                 <i class="fa fa-plus"></i>
@@ -54,11 +76,11 @@
                             </a>
                         </div>      
                     </div>
-                    <div class="list-group" id="stream_list" >
+                    <div class="list-group" id="stream_list">
                         <!-- CONTENT -->
                     </div>
                     <div class="panel-footer">
-                        <small class="pull-left">#askbudi live stream</small>
+                        <small class="pull-left">#askbudi</small>
                         <a class="btn btn-link btn-xs pull-right" href="http://www.twitter.com/tampanberiman" target="_blank">@tampanberiman</a>
                     </div>
                 </div>
@@ -123,6 +145,53 @@
         React.render(
             <StreamList />,
             document.getElementById('stream_list')
+        );
+
+        var TechCard = React.createClass({
+            render: function () {
+                var data = this.props.data;
+                return (
+                    <a className="list-group-item" href="#">
+                        <img src={data.image} className="img-rounded pull-left"/>
+                        <h4 className="list-group-item-heading">{data.name}</h4>
+                        <p className="list-group-item-text">{data.text}</p>
+                    </a>
+                );
+            }
+        });
+
+        var techs = [
+            {name: 'NodeJS', text: 'back-end', image: 'http://dius.wordpress.dius.com.au/wp-content/uploads/sites/2/2015/06/NodeJS-Small-Blog-Feature-Image-.jpg'},
+            {name: 'Express', text: 'back-end', image: 'https://cdn.tutsplus.com/net/uploads/2013/07/express-retina-preview.jpg'},
+            {name: 'SocketIO', text: 'back-end', image: 'https://pbs.twimg.com/profile_images/470682672235151360/vI0ZZlhZ.png'},
+            {name: 'MongoDB', text: 'database', image: 'http://blog.fabianpiau.com/wp-content/uploads/2013/01/00048.png'},
+            {name: 'React', text: 'front-end', image: 'https://facebook.github.io/react/img/logo_og.png'},
+            {name: 'Bootcards', text: 'front-end', image: 'https://pbs.twimg.com/profile_images/455695201411936256/ukb0kn0G_400x400.png'},
+            {name: 'Twitter API', text: 'third-party API', image: 'https://pbs.twimg.com/profile_images/2284174872/7df3h38zabcvjylnyfe3.png'},
+            {name: 'Wikipedia API', text: 'third-party API', image: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/500px-Wikipedia-logo-v2.svg.png'},
+        ];
+        var TechList = React.createClass({
+            
+            getInitialState: function () {
+                return {
+                    techs: techs
+                };
+            },
+            render: function () {
+                var techCards = this.state.techs.map(function (tech) {
+                    return (
+                        <TechCard data={tech}></TechCard>
+                    );
+                });
+                return (
+                    <div className="list-group">{techCards}</div>
+                );
+            }
+        });
+
+        React.render(
+            <TechList />,
+            document.getElementById('tech_list')
         );
         
     </script>
