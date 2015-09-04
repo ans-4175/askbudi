@@ -27,7 +27,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">About Budi</h3>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" id="stream_app">
                         <p>Budi, the question-answering bot, is your best friend.</p>
                         <ul>
                             <li>Ask your question via <a href="http://twitter.com" target="_blank">twitter</a>.</li>
@@ -54,7 +54,7 @@
                             </a>
                         </div>      
                     </div>
-                    <div class="list-group" id="stream_placeholder" >
+                    <div class="list-group" id="stream_list" >
                         <!-- CONTENT -->
                     </div>
                     <div class="panel-footer">
@@ -68,31 +68,64 @@
 
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+
     <script>
-
         var socket = io('http://ssh.pandu.ml:8080');
+        // var socket = io('http://localhost:8080');
+    </script>
 
-        var buildTweetCard = function (msg) {
-            var template = '';
-            template += '<a class="list-group-item" href="#">';
-            template += '<img src="'+msg.avatar+'" class="img-rounded pull-left"/>';
-            template += '<h4 class="list-group-item-heading">'+msg.author+'</h4>';
-            // template += '<h4 class="list-group-item-heading">@'+msg.screen_name+'</h4>';
-            // template += '<h4 class="list-group-item-heading">'+msg.author+' - @'+msg.screen_name+'</h4>';
-            template += '<p class="list-group-item-text">'+msg.body+'</p>';
-            template += '</a>';
-            return template;
-        }
-        socket.on('frontend:list', function(msg){
-            var template = buildTweetCard(msg);
-            $('#stream_placeholder').append(template);
+    <script type="text/jsx">
+
+        var StreamCard = React.createClass({
+            render: function () {
+                var stream = this.props.stream;
+                return (
+                    <a className="list-group-item" href="#">
+                        <img src={stream.avatar} className="img-rounded pull-left"/>
+                        <h4 className="list-group-item-heading">{stream.author}</h4>
+                        <p className="list-group-item-text">{stream.body}</p>
+                    </a>
+                );
+            }
         });
-        socket.on('frontend:init', function(msgs){
-            msgs.forEach(function (msg) {
-                var template = buildTweetCard(msg);
-                $('#stream_placeholder').append(template);
-            })
+
+        var StreamList = React.createClass({
+            getInitialState: function () {
+                return {streams: []};
+            },
+            componentDidMount: function () {
+                socket.on('frontend:init', this._initialize);
+                socket.on('frontend:list', this._list);
+            },
+            _initialize: function (streams) {
+                this.setState({streams: streams});
+                console.log(this.state.streams);
+            },
+            _list: function (stream) {
+                var streams = this.state.streams;
+                var newStreams = [stream].concat(streams);
+                this.setState({streams: newStreams});
+            },
+            render: function () {
+                var streamCards = this.state.streams.map(function (stream) {
+                    return (
+                        <StreamCard stream={stream}></StreamCard>
+                    );
+                });
+                return (
+                    <div>{streamCards}</div>
+                );
+            }
         });
+
+        React.render(
+            <StreamList />,
+            document.getElementById('stream_list')
+        );
+        
     </script>
 
 </body>

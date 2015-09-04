@@ -25,7 +25,7 @@ TwitterClient.event.on('ada_stream', function(tweet) {
 				.then(TwitterClient.sendToFrontEnd)
 				.then(function (twit) {console.log(twit.body);})
 				.catch(console.log);
-			return Promise.all([p1]);
+			return Promise.all([p1, p2]);
 		})
 		.catch(console.log);
 });
