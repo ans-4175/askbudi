@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google" value="notranslate">
+
+    <title>Anda Bertanya Budi Menjawab</title>
+
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootcards CSS files for desktop, iOS and Android -->
+    <!-- You'll only need to load one of these (depending on the device you're using) in production -->
+    <!-- <link href="http://cdnjs.cloudflare.com/ajax/libs/bootcards/1.1.1/css/bootcards-ios.min.css" rel="stylesheet"> -->
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/bootcards/1.1.1/css/bootcards-desktop.min.css" rel="stylesheet">
+    <!-- <link href="http://cdnjs.cloudflare.com/ajax/libs/bootcards/1.1.1/css/bootcards-android.min.css" rel="stylesheet"> -->
+    <!-- Font awesome -->
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-7 bootcards-cards hidden-xs">
+                <div class="panel panel-default bootcards-richtext">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">About Budi</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>Budi, the question-answering bot, is your best friend.</p>
+                        <ul>
+                            <li>Ask your question via <a href="http://twitter.com" target="_blank">twitter</a>.</li>
+                            <li>Ask your question via .</li>
+                        </ul>
+                        <p>
+                            This is only a sample page: it is not meant to be fully functional. We've used <a href="http://fortawesome.github.io/Font-Awesome/" target="_blank">Font Awesome</a> for the icons and have include FTLabs' <a href="https://github.com/ftlabs/fastclick" target="_blank">FastClick</a> library to make tapping links on iOS faster.
+                        </p>
+                    </div>
+                    <div class="panel-footer">
+                        <small class="pull-left">Built with NodeJS + SocketIO + Twitter API + Wikimedia API</small>
+                        <a class="btn btn-link btn-xs pull-right" href="#">askbudi.pandu.ml</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5 bootcards-list" id="list">
+                <div class="panel panel-default">    
+                    <div class="panel-heading clearfix">
+                        <h3 class="panel-title pull-left">Ask Me Anything!</h3>
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-primary" href="http://www.twitter.com" target="_blank">
+                                <i class="fa fa-plus"></i>
+                                <span>tweet</span>
+                            </a>
+                        </div>      
+                    </div>
+                    <div class="list-group" id="stream_placeholder" >
+                        <!-- CONTENT -->
+                    </div>
+                    <div class="panel-footer">
+                        <small class="pull-left">#askbudi live stream</small>
+                        <a class="btn btn-link btn-xs pull-right" href="http://www.twitter.com/tampanberiman" target="_blank">@tampanberiman</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+
+        var socket = io('http://ssh.pandu.ml:8080');
+
+        var buildTweetCard = function (msg) {
+            var template = '';
+            template += '<a class="list-group-item" href="#">';
+            template += '<img src="'+msg.avatar+'" class="img-rounded pull-left"/>';
+            template += '<h4 class="list-group-item-heading">'+msg.author+'</h4>';
+            // template += '<h4 class="list-group-item-heading">@'+msg.screen_name+'</h4>';
+            // template += '<h4 class="list-group-item-heading">'+msg.author+' - @'+msg.screen_name+'</h4>';
+            template += '<p class="list-group-item-text">'+msg.body+'</p>';
+            template += '</a>';
+            return template;
+        }
+        socket.on('frontend:list', function(msg){
+            var template = buildTweetCard(msg);
+            $('#stream_placeholder').append(template);
+        });
+        socket.on('frontend:init', function(msgs){
+            msgs.forEach(function (msg) {
+                var template = buildTweetCard(msg);
+                $('#stream_placeholder').append(template);
+            })
+        });
+    </script>
+
+</body>
+</html>
