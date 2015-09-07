@@ -43,6 +43,8 @@ TwitterClient.prototype.getAnswer = function(tweet) {
 		var sentence = tweet.body;
 		sentence = sentence.replace(' #askbudi', '');
 		sentence = sentence.replace('#askbudi', '');
+		if (sentence.indexOf('RT')>-1)
+			reject('containing RT');
 		var search_url = 'https://en.wikipedia.org/w/api.php?format=json&action=query&list=search&srsearch='+sentence;
 		request({
 			uri: search_url,

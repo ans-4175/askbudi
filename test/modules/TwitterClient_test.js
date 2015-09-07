@@ -32,6 +32,15 @@ describe('TwitterClient node module', function () {
 	    });
 	});
 
+	it('getAnswer #4', function () {
+		var search = {screen_name:'anpandu', body:'RT @wonkdesu milky way #askbudi'};
+		return TwitterClient.getAnswer(search)
+			.then(function(data){})
+			.catch(function(data){
+				assert(data == 'containing RT', 'not containing RT');
+			});
+	});
+
 	it('processAnswer', function () {
 		var input = {
 		    screen_name: "anpandu",
@@ -43,13 +52,13 @@ describe('TwitterClient node module', function () {
 	    });
 	});
 
-	// it('getAnswer & processAnswer', function () {
-	// 	var search = {screen_name:'anpandu', body:'within temptation #askbudi'};
-	// 	return TwitterClient.getAnswer(search).then(function(data){
-	// 		return TwitterClient.processAnswer(data).then(function(data){
-	// 			assert(data.length <= 140, 'string more than 140 characters');
-	// 	    });
-	//     });
-	// });
+	it('getAnswer & processAnswer', function () {
+		var search = {screen_name:'anpandu', body:'within temptation #askbudi'};
+		return TwitterClient.getAnswer(search).then(function(data){
+			return TwitterClient.processAnswer(data).then(function(data){
+				assert(data.length <= 140, 'string more than 140 characters');
+		    });
+	    });
+	});
 
 });
