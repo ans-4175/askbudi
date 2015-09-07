@@ -52,7 +52,7 @@ io.on('connection', function (socket) {
 	
 	TweetModel.find({})
 		.sort({'date': -1})
-		.limit(20)
+		.limit(50)
 		.exec(function (err, items) {
 			socket.emit('frontend:init', items);
 		});
