@@ -19,6 +19,8 @@ var DataHelper = function () {};
 
 DataHelper.prototype.preprocess = function(data) {
 	return new Promise( function (resolve, reject) {
+		if (data['text'].indexOf('RT')>-1)
+			reject('containing RT');
 		var tweet = {
 			twid: data['id'],
 			active: false,

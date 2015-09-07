@@ -70,17 +70,25 @@ var input = {
 
 describe('DataHelper node module', function () {
 
-	it('preprocess', function () {
-		return DataHelper.preprocess(input).then(function(data){
-			assert('twid' in data, 'twid not found');
-			assert('active' in data, 'active not found');
-			assert('author' in data, 'author not found');
-			assert('avatar' in data, 'avatar not found');
-			assert('body' in data, 'body not found');
-			assert('date' in data, 'date not found');
-			assert('screen_name' in data, 'screen_name not found');
-	    });
-	});
+    it('preprocess', function () {
+        return DataHelper.preprocess(input).then(function(data){
+            assert('twid' in data, 'twid not found');
+            assert('active' in data, 'active not found');
+            assert('author' in data, 'author not found');
+            assert('avatar' in data, 'avatar not found');
+            assert('body' in data, 'body not found');
+            assert('date' in data, 'date not found');
+            assert('screen_name' in data, 'screen_name not found');
+        });
+    });
+
+    it('preprocess RT', function () {
+        return DataHelper.preprocess(input)
+            .then(function(data){})
+            .catch(function(data){
+                assert(data == 'containing RT', 'not containing RT');
+            });
+    });
 
 	// it('save to mongo', function () {
 
