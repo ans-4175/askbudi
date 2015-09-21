@@ -8,7 +8,7 @@ Mongoose.connect('mongodb://localhost/askbudi');
 
 var TweetModel = require('./models/Tweet.js');
 
-TwitterClient.stream();
+// TwitterClient.stream();
 
 TwitterClient.event.on('ada_stream', function(tweet) {
 	DataHelper.preprocess(tweet)

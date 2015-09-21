@@ -10,6 +10,7 @@ var request = require('request');
 var Promise = require('bluebird');
 var Twitter = require('twitter');
 var EventEmitter = require("events").EventEmitter;
+var fs = require('fs');
 
 /**
  * @param {}
@@ -17,18 +18,20 @@ var EventEmitter = require("events").EventEmitter;
  * @api public
  */
 
-var TwitterClient = function () {};
+var TwitterClient = function () {
+	var _this = this;
+	fs.readFile('config.json', 'utf8', function (err,data) {
+		if (err)
+			return console.log(err);
+		_this.credential = JSON.parse(data);
+		_this.client = new Twitter(_this.credential);
+		_this.stream();
+	});
+};
 
 TwitterClient.prototype.event = new EventEmitter();
 TwitterClient.prototype.stream = function() {
-	var client = new Twitter({
-		consumer_key: 'Dsmj7TH879HnWAA6n4aug',
-		consumer_secret: 'Wya4BuwIjGn5MJLbYcH3FqGjJhUmo63eSAu1jZ4fZk',
-		access_token_key: '3249425742-JtZeoEgChEOrS70MYbdxtGX0Ox8HBtWpkl2YCBf',
-		access_token_secret: 'TkFzP5KfsH1u5zbp9eCE47e0vDZ9FjoEptR6FgUfyOAC6'
-	});
-	// client.stream('statuses/filter', {locations: '107.4379109,-6.9708697,107.7455281,-6.8435694,106.7067372,-6.328073,106.9888851,-6.103677'}, function(stream) {
-	client.stream('statuses/filter', {track: '#askbudi'}, function(stream) {
+	this.client.stream('statuses/filter', {track: '#askbudi'}, function(stream) {
 		stream.on('data', function(tweet) {
 			TwitterClient.prototype.event.emit("ada_stream", tweet);
 		});
@@ -107,17 +110,16 @@ TwitterClient.prototype.processAnswer = function(content) {
 
 TwitterClient.prototype.postTweet = function(data) {
 	return new Promise(function (resolve, reject) {
-		var client = new Twitter({
-			consumer_key: 'Dsmj7TH879HnWAA6n4aug',
-			consumer_secret: 'Wya4BuwIjGn5MJLbYcH3FqGjJhUmo63eSAu1jZ4fZk',
-			access_token_key: '3334132323-2EGzJaw0KCDm8ibP6NuppZ1iAIdZ02yVepzcaiE',
-			access_token_secret: '1q4z86o9pHv2l3Dj0hQMQ8vX7PTDHBzTlrWsUWcC8usCX'
-		});
-		client.post('statuses/update', { status: data }, function(err, data, response) {
-			if (err)
-				console.log(err)
-			// console.log(data.text)
-			resolve(data);
+		fs.readFile('config.json', 'utf8', function (err,config) {
+			if (err) return console.log(err);
+			var credential = JSON.parse(config);
+			var client = new Twitter(credential);
+			client.post('statuses/update', { status: data }, function(err, data, response) {
+				if (err)
+					console.log(err)
+				// console.log(data.text)
+				resolve(data);
+			});
 		});
 	});
 }
