@@ -11,6 +11,7 @@ var Promise = require('bluebird');
 var Twitter = require('twitter');
 var EventEmitter = require("events").EventEmitter;
 var fs = require('fs');
+var DataHelper = require('./DataHelper.js');
 
 /**
  * @param {}
@@ -30,6 +31,7 @@ var TwitterClient = function () {
 };
 
 TwitterClient.prototype.event = new EventEmitter();
+
 TwitterClient.prototype.stream = function() {
 	this.client.stream('statuses/filter', {track: '#askbudi'}, function(stream) {
 		stream.on('data', function(tweet) {
@@ -130,5 +132,28 @@ TwitterClient.prototype.sendToFrontEnd = function(twit) {
 		resolve(twit);
 	});
 }
+
+TwitterClient.prototype.event.on('ada_stream', function(tweet) {
+	DataHelper.preprocess(tweet)
+		.then(function (data) {
+			var p1 = DataHelper.saveToMongo(data)
+				.then(TwitterClient.prototype.sendToFrontEnd)
+				.then(function (twit) {console.log(twit.body);})
+				.catch(console.log);
+			var p2 = TwitterClient.prototype.getAnswer(data)
+				.then(TwitterClient.prototype.processAnswer)
+				.then(TwitterClient.prototype.postTweet)
+				.then(DataHelper.preprocess)
+				.then(DataHelper.saveToMongo)
+				.then(TwitterClient.prototype.sendToFrontEnd)
+				.then(function (twit) {console.log(twit.body);})
+				.catch(console.log);
+			return Promise.all([p1, p2]);
+		})
+		.catch(console.log);
+});
+TwitterClient.prototype.event.on('ada_error', function(error) {
+	console.log(error);
+});
 
 module.exports = new TwitterClient ();
